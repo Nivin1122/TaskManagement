@@ -6,7 +6,7 @@ import uuid
 
 # Create your models here.
 class Note(models.Model):
-    node_id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    note_id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     user = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
     note_title = models.CharField(max_length = 200)
     note_content = models.TextField()
