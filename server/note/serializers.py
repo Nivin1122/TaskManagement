@@ -4,4 +4,4 @@ from .models import Note
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        exclude = ["note_id", "user"]
+        exclude = ["user"]

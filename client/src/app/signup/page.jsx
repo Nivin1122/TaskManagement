@@ -1,19 +1,72 @@
-import instance from '@/utils/axiosInstance'
-import Link from 'next/link'
-import React from 'react'
+"use client"
 
-const axiosInstance = instance
+import instance from '@/utils/axiosInstance'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import React, { useState } from 'react'
+
 
 const page = () => {
+    const axiosInstance = instance
+    const router = useRouter()
+    const [data, setData] = useState({
+        user_name: "",
+        user_email: "",
+        password: "",
+        confirm_password: ""
+    })
 
-  const submitHandler = () => {
-    axiosInstance.post("/user/login")
-    .then(res => {
-        alert(res.data.message)
+    const [error, setError] = useState({
+        user_name: "",
+        user_email: "",
+        password: "",
+        confirm_password: ""
     })
-    .catch(err => {
-        alert(err.response.data.message)
-    })
+
+    const changeHandler = (event) => {
+        const tempData = {...data}
+        const tempError = {...error}
+        tempData[event.target.name] = event.target.value
+        tempError[event.target.name] = ""
+        setData(tempData)
+        setError(tempError)
+
+    }
+
+  const submitHandler = (event) => {
+    event.preventDefault()
+    if (data.password === ""){
+        const tempData = {...error}
+        tempData.password = "Password is required"
+        setError(tempData)
+    }
+    else if(data.password === data.confirm_password){
+        axiosInstance.post("/user/register/", data)
+        .then(res => {
+            alert(res.data.message)
+            router.push('/login')
+        })
+        .catch(err => {
+            const error = err.response.data
+            const tempError = {...error}
+            if (error.user_name){
+                tempError["user_name"] = error.user_name
+            }
+            if (error.user_email){
+                tempError["user_email"] = error.user_email
+            }
+            if (error.password){
+                tempError["password"] = error.password
+            }
+
+            setError(error)
+        })
+    }
+    else{
+        const tempData = {...error}
+        tempData.confirm_password = "Password doesnt match"
+        setError(tempData)
+    }
   }
 
   return (
@@ -29,15 +82,19 @@ const page = () => {
         </div>
         <div className='px-4 py-6'>
           <h1 className='text-center text-3xl font-bold mb-6'>Sign up</h1>
-          <form>
+          <form onSubmit={submitHandler}>
             <label htmlFor = "username" className='block mb-1 font-semibold'>Username</label>
-            <input type = "text" placeholder='Username' id = "username" className='block mb-1 border-2 bg-white border-orange-900 rounded-lg px-2 py-1 w-full'></input>
+            <input onChange = {changeHandler} type = "text" placeholder='Username' id = "username" name = "user_name" value = {data.user_name} className='block mb-1 border-2 bg-white border-orange-900 rounded-lg px-2 py-1 w-full'></input>
+            <p className = "text-red-500">{error.user_name}</p>
             <label htmlFor = "email" className='block mb-1 font-semibold'>Email</label>
-            <input type = "email" placeholder='Email' id = "email" className='block mb-1 border-2 bg-white border-orange-900 rounded-lg px-2 py-1 w-full'></input>
+            <input onChange = {changeHandler} type = "email" placeholder='Email' id = "email" name = "user_email" value = {data.user_email} className='block mb-1 border-2 bg-white border-orange-900 rounded-lg px-2 py-1 w-full'></input>
+            <p className = "text-red-500">{error.user_email}</p>
             <label htmlFor = "password" className='block mb-1 font-semibold'>Password</label>
-            <input type = "password" placeholder='Password' id = "password" className='block mb-1 border-2 bg-white border-orange-900 rounded-lg px-2 py-1 w-full'></input>
-            <label htmlFor = "password" className='block mb-1 font-semibold'>Confirm Password</label>
-            <input type = "password" placeholder='Confirm Password' id = "password" className='block mb-1 border-2 bg-white border-orange-900 rounded-lg px-2 py-1 w-full'></input>
+            <input onChange = {changeHandler} type = "password" placeholder='Password' id = "password" name = "password" value = {data.password} className='block mb-1 border-2 bg-white border-orange-900 rounded-lg px-2 py-1 w-full'></input>
+            <p className = "text-red-500">{error.password}</p>
+            <label htmlFor = "confirm_password" className='block mb-1 font-semibold'>Confirm Password</label>
+            <input onChange = {changeHandler} type = "password" placeholder='Confirm Password' id = "confirm_password" name = "confirm_password" value = {data.confirm_password} className='block mb-1 border-2 bg-white border-orange-900 rounded-lg px-2 py-1 w-full'></input>
+            <p className = "text-red-500">{error.confirm_password}</p>
             <div className='mt-10 flex justify-center gap-3'>
               <button className='py-[7px] text-center w-[120px] rounded-lg bg-green-500/70 font-semibold text-green-900'>Register</button>
               <Link href = "/login" className='py-[7px] text-center w-[120px] rounded-lg bg-orange-800/40 font-semibold'>Login</Link>
