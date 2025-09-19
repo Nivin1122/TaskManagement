@@ -5,14 +5,17 @@ import EditTask from '@/components/EditTask'
 import instance from '@/utils/axiosInstance'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const page = () => {
     const axiosInstance = instance
     const [notes, setNotes] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const [editNote, setEditNote] = useState(false)
+    const router = useRouter()
 
-    useEffect(() => {
-        axiosInstance.get("/notes", {withCredentials: true})
+    const updateTasks = () => {
+        axiosInstance.get("/notes/", {withCredentials: true})
         .then(res => {
             console.log(res.data)
             setNotes(res.data)
@@ -20,8 +23,16 @@ const page = () => {
         })
         .catch(err => {
             setIsLoading(false)
+            if(err.response.status === 401){
+                router.push("/login")
+            }
         })
+    }
+
+    useEffect(() => {
+        updateTasks()
     }, [])
+
     return (
         <div className='container mx-auto'>
             <h1 className='text-5xl font-bold mt-10'>Good Morning Deva!</h1>
@@ -32,7 +43,7 @@ const page = () => {
                             <div className='flex justify-between bg-orange-800/40 py-1 px-4 border-b-2 border-orange-900 items-center'>
                                 <p className='font-bold '>{note.note_title}</p>
                                 <div className='flex gap-2'>
-                                    <button command="show-modal" commandfor="dialog-edit">&#127919;</button>
+                                    <button command="show-modal" commandfor="dialog-edit" onClick={()=>setEditNote(note)}>&#127919;</button>
                                 </div>
                             </div>
                             <div className='px-4 pt-6 pb-2 bg-white'>
@@ -54,7 +65,7 @@ const page = () => {
 
 
             <AddTask />
-            <EditTask />
+            <EditTask note = {editNote} updateTasks = {updateTasks}/>
             
         </div>
     )
