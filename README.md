@@ -21,6 +21,10 @@ bash# Clone and navigate to the project
 git clone (https://github.com/Nivin1122/TaskManagement.git)
 cd task-management-system
 
+# PROJECT IMAGES AND VIDEO DRIVE LINK !!!
+https://drive.google.com/drive/folders/1d4ldsSzM2ZPRQyD07RBvruXLUod2oWI2?usp=sharing
+
+
 # Create virtual environment
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
