@@ -9,7 +9,7 @@ const Header = () => {
     const pathname = usePathname();
   return (
     <>
-        <header className='bg-cyan-900/50'>
+        <header className='bg-cyan-900/50 py-3'>
             <div className='container mx-auto flex justify-between '>
                 <h1 className='text-cyan-900 font-bold text-3xl'><Link href = "/">Keep Notes</Link></h1>
 

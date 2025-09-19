@@ -60,11 +60,11 @@ const page = () => {
             <div className='text-center'>
                 {!isLoading && !notes.length ? <p className='mt-5'>No notes have been created yet.</p>:""}
                 
-                <button command="show-modal" commandfor="dialog" className='py-[7px] text-center w-[120px] rounded-lg bg-green-500/70 font-semibold text-green-900 mt-5'>Add Note</button>
+                <button command="show-modal" commandfor="dialog" className='py-[7px] text-center w-[120px] rounded-lg bg-green-500/70 font-semibold text-green-900 mt-5 mb-10'>Add Note</button>
             </div>
 
 
-            <AddTask />
+            <AddTask updateTasks = {updateTasks} />
             <EditTask note = {editNote} updateTasks = {updateTasks}/>
             
         </div>

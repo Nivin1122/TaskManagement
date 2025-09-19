@@ -14,9 +14,10 @@ class NoteViewSet(viewsets.ModelViewSet):
         return Note.objects.filter(user = self.request.user)
 
     def create(self, request):
+        
         note = Note.objects.create(
             user = request.user,
-            note_title = request.POST.get("note_title"),
-            note_content = request.POST.get("note_content")
+            note_title = request.data.get("note_title"),
+            note_content = request.data.get("note_content")
         )
         return Response({"message": "Note created successfully"})
